@@ -1,0 +1,23 @@
+{
+    "manifest_version": 2,
+    "name": "Posbit",
+    "short_name":"posbit",
+    "version": "1.8",
+    "description": "Bitso postulation",
+    "content_scripts": [{
+      "matches": ["https://*.bitso.com/*"],
+      "js": ["js/localstorage.js","js/posbit.js","js/contentscript.js"]
+    }],
+    "background": {
+        "scripts": ["js/background.js"]
+    },
+    "permissions": [
+        "notifications", "tabs", "https://*.bitso.com/*", "activeTab"
+    ],
+    "icons": {
+        "16": "icons/icon16x16.png",
+        "19": "icons/icon19x19.png",
+        "48": "icons/icon48x48.png",
+        "128": "icons/icon128X128.png"
+    }
+}
