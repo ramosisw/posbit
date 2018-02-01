@@ -4,6 +4,7 @@
     "short_name"       : "posbit",
     "version"          : "1.10",
     "description"      : "Bitso postulation",
+    "options_page"     : "options.html",
     "content_scripts": [{
       "matches": ["https://*.bitso.com/*"],
       "js": ["js/localstorage.js","js/posbit.js","js/contentscript.js"]
