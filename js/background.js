@@ -1,6 +1,6 @@
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
     var containsRequest = ["title","message"];
-    var isValidRequest = false:
+    var isValidRequest = false;
     for(var key in request){
         if(!request.hasOwnProperty(key)) continue;
         for (var i = 0; contain = containsRequest[i]; i++) {

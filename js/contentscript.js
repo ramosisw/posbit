@@ -1,5 +1,6 @@
 (function(){
-    if(window.location.pathname.indexOf('/trade/') == 0 && window.location.pathname.length != '/trade/xrp/mxn'.length) return;
+    if(window.location.pathname.indexOf('/trade') == -1) return;
+    if(window.location.pathname.indexOf('/trade/') == 0 && window.location.pathname.length != '/trade/xxx/xxx'.length) return;
     var flagBuy = "fa fa-arrow-right";
     var amount = document.querySelector(".tradebalance:nth-child(2) > .balance-container > .balance").innerText.replace(/[^\d\.]/g,"") * 1;
     var commision = document.querySelector("#trading-fee").innerText.replace(/[^\d\.]/g, "") * 1 / 100;
