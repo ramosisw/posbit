@@ -1,6 +1,108 @@
-<html>
-	<head></head>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<link rel="icon" href="/icons/icon.png">
+		<title>Posbit - Settings</title>
+		<!-- Bootstrap core CSS -->
+		<!--link href="/css/bootstrap-grid.min.css" rel="stylesheet"/-->
+		<!--link href="/css/bootstrap-reboot.min.css" rel="stylesheet"/-->
+		<link href="/css/bootstrap.min.css" rel="stylesheet"/>
+		<!-- Custom styles for this template -->
+		<link href="/css/dashboard.css" rel="stylesheet">
+		<link href="/css/chart.css" rel="stylesheet">
+		<link href="/css/options.css" rel="stylesheet">
+	</head>
 	<body>
-		<h1>Comming soon</h1>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">Posbit</a>
+				</div>
+			</div>
+		</nav>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-3 col-md-2 sidebar">
+					<ul class="nav nav-sidebar">
+						<li><a href="#home" data-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Home</a></li>
+						<li><a href="#formulas" data-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Formulas</a></li>
+						<li><a href="#other" data-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Other</a></li>
+					</ul>
+					<ul class="nav nav-sidebar">
+						<li><a href="">Nav item</a></li>
+					</ul>
+					<ul class="nav nav-sidebar">
+						<li><a href="">Nav item again</a></li>
+					</ul>
+				</div>
+				<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+					<div class="tab-content" id="myTabContent">
+						<div class="tab-pane " id="home" role="tabpanel" aria-labelledby="home-tab">
+							<h2 class="page-header">Home</h2>
+							<p>Eu dolore ea ullamco dolore Lorem id cupidatat excepteur reprehenderit consectetur elit id dolor proident in cupidatat officia. Voluptate excepteur commodo labore nisi cillum duis aliqua do. Aliqua amet qui mollit consectetur nulla mollit velit aliqua veniam nisi id do Lorem deserunt amet. Culpa ullamco sit adipisicing labore officia magna elit nisi in aute tempor commodo eiusmod.</p>
+						</div>
+						<div class="tab-pane show active" id="formulas" role="tabpanel" aria-labelledby="profile-tab">
+							<h2 class="page-header">Formulas</h2>
+							<h2 class="page-header">$ <span id="formula-result">0.00</span></h2>
+							<div class="row">
+								<div class="col-md-4">
+									<div class="panel panel-default">
+										<div class="panel-heading">Formula { x = b * ( 1 + 2 * c) }</div>
+										<div class="panel-body">
+											<p>Determina el precio minimo de venta para recuperar la inversión</p>
+											<form action="" class="formula" id="1" role="form" autocomplete="off">
+												<div class="form-row">
+													<div class="form-group col-md-6">
+														<label for="inputEmail4">Precio de compra</label>
+														<input type="number" class="form-control" id="B" placeholder="B" value="0.00"  pattern="[0-9]*">
+													</div>
+													<div class="form-group col-md-6">
+														<label for="inputPassword4">% Comision</label>
+														<input type="number" class="form-control" id="C" placeholder="C" value="0.80"  pattern="[0-9]*">
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="panel panel-default">
+										<div class="panel-heading">Formula { x = b * ( 1 + 2 * c) }</div>
+										<div class="panel-body">
+											<p>Determina el precio minimo de venta para recuperar la inversión</p>
+											<form action="" class="formula" id="1" role="form" autocomplete="off">
+												<div class="form-row">
+													<div class="form-group col-md-6">
+														<label for="inputEmail4">Precio de compra</label>
+														<input type="number" class="form-control" id="B" placeholder="B" value="0.00"  pattern="[0-9]*">
+													</div>
+													<div class="form-group col-md-6">
+														<label for="inputPassword4">% Comision</label>
+														<input type="number" class="form-control" id="C" placeholder="C" value="0.80"  pattern="[0-9]*">
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane" id="other" role="tabpanel" aria-labelledby="contact-tab">
+							<h2 class="page-header">Other</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Bootstrap core JavaScript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="/js/jquery.min.js" ></script>
+		<!--script src="/js/popper.min.js"></script-->
+		<script src="/js/bootstrap.min.js"></script>
+		<script src="/js/options.js"></script>
 	</body>
 </html>

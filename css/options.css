@@ -1,0 +1,14 @@
+span.gbp {
+    float: left;
+    text-align: left;
+}
+
+span.gbp::before {
+    float: left;
+    content: "\00a3"; /* £ */
+    padding: 3px 4px 3px 3px;
+}
+
+span.gbp input {
+     width: 280px !important;
+}
