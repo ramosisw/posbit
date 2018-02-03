@@ -1,14 +1,26 @@
-span.gbp {
-    float: left;
-    text-align: left;
+.equal, .equal > div[class*='col-'] {  
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex:1 1 auto;
 }
 
-span.gbp::before {
-    float: left;
-    content: "\00a3"; /* £ */
-    padding: 3px 4px 3px 3px;
+.equal .panel p {
+	height: 60px;
 }
 
-span.gbp input {
-     width: 280px !important;
+.sidebar, .sidebar a{
+	background-color: #dff0d8;
+	color: #3c763d;
+}
+
+.sidebar>.nav>li>a:focus, .sidebar>.nav>li>a:hover, .sidebar>.nav>li>a.active{
+	background-color: #3c763d !important;
+	color: white;
+}
+
+.navbar-brand{
+    color: #3c763d !important;
 }

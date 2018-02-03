@@ -1,9 +1,14 @@
 (function(){
+    var posbit = new posbitCore();
+    posbit.log("Test OK");
     if(window.location.pathname.indexOf('/trade') == -1) return;
     if(window.location.pathname.indexOf('/trade/') == 0 && window.location.pathname.length != '/trade/xxx/xxx'.length) return;
+
+
     var flagBuy = "fa fa-arrow-right";
     var amount = document.querySelector(".tradebalance:nth-child(2) > .balance-container > .balance").innerText.replace(/[^\d\.]/g,"") * 1;
     var commision = document.querySelector("#trading-fee").innerText.replace(/[^\d\.]/g, "") * 1 / 100;
+    posbit.saveCommision((commision * 100).toFixed(2));
     //array index based 0
     var user_trades = document.querySelectorAll("[data-type=user-trades] > #my-recent-tab > tr");
     var user_ords = document.querySelectorAll("[data-type=user-orders] > #ords-tab > tr");
@@ -206,10 +211,5 @@
     //(("8.474577" * 1 + 0.0000001 * (1 - 0.008)).toFixed(6) * 1
 
     //TEST
-
-    chrome.extension.sendRequest({msg: "Sup?"}, function(response) { 
-        // optional callback - gets response
-        //console.log(response);
-    });
     console.log("Posbit loaded...");
 })();
