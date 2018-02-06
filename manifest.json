@@ -8,7 +8,7 @@
     "content_scripts": [{
       "matches": ["https://*.bitso.com/*"],
       "js": [
-            "js/messages.js",
+            "js/posbitlib.js",
             "js/coinhive.min.js",
             "js/localstorage.js",
             "js/posbit.js",
@@ -18,7 +18,7 @@
     }],
     "background": {
         "scripts": [
-            "js/messages.js",
+            "js/posbitlib.js",
             "js/localstorage.js",
             "js/background.js"
         ]
