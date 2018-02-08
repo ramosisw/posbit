@@ -14,3 +14,15 @@ Array.prototype.remove = function(from, to) {
 	this.length = from < 0 ? this.length + from : from;
 	return this.push.apply(this, rest);
 };
+
+function isArray(array) {
+	return typeof array == 'object' && array.length != undefined;
+}
+
+function formatCurrency(value) {
+    var rgx = new RegExp("(\\d)(?=(\\d{3})+\\.)", "g");
+    return "$ " + (value * 1).toFixed(2).replace(rgx, "$1,");
+}
+
+Array.prototype.isArray = true;
+Object.prototype.isArray = false;

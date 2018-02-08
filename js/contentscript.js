@@ -12,17 +12,22 @@
     var user_trades = document.querySelectorAll("[data-type=user-trades] > #my-recent-tab > tr");
     var user_ords = document.querySelectorAll("[data-type=user-orders] > #ords-tab > tr");
     var price = document.querySelector("#menu_price_drop").innerText.replace(/(^\d)|([^\d\.])/g, "") * 1;
+    var book = document.querySelector("#book-label [data-bind=\"label\"]").textContent;
     /*
     //Sample listener DOM
     document.querySelector("#menu_price_drop").addEventListener("DOMSubtreeModified", function(e){console.log("Change " + e.srcElement.innerText); }, false);
     */
-    posbit.saveCommision(commision);
+    //posbit.saveCommision(commision);
 
     var loopAmount = 0;
 
     //Identificar las compras y quitar comisiones de compra
     posbit.normalizeValues(user_trades, commision);
-    posbit.addOrders(user_ords);
+    var books = book.toLowerCase().split("/");
+    var book_id = books[1] + "_" + books[0];
+    posbit.addOrders(user_ords, book_id);
+    posbit.listenerNotifications();
+    posbit.listenerOrdersTab(book);
 
     //Remover transacciones empatadas en compra venta
     for (var i = user_trades.length - 1; trade = user_trades[i]; i--) {
@@ -58,8 +63,7 @@
             //console.log(JSON.stringify(log));
 
             if ((transaction.received - pagedEmp) < 0) {
-                j = $i++;
-                continue;
+                break;
             };
 
             if (Math.abs(transaction.received - pagedEmp) <= 0.000001) {
@@ -73,9 +77,8 @@
 
         //Mark red las operaciones que esten en venta
         for (var j = user_ords.length - 1; searchOrd = user_ords[j]; j--) {
-
             var searchColumns = searchOrd.querySelectorAll("td");
-            var searchTransaction = posbit.processColumnsRows(searchColumns);
+            var searchTransaction = posbit.processOrderColumns(searchColumns);
             if (!searchTransaction.buy && trade.className != "info" || trade.className != "danger") {
                 if (Math.abs(transaction.received - searchTransaction.amount) <= 0.000001) {
                     var _i = searchOrd.getAttribute("data-mark");
@@ -96,7 +99,6 @@
 
     //Inject tooltip
     posbit.injectTooltip();
-    posbit.listenerNotifications();
 
     //under construction
     for (var i = 0; trade = user_trades[i]; i++) {

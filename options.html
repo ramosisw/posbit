@@ -7,8 +7,6 @@
 		<link rel="icon" href="/icons/icon.png">
 		<title>Posbit - Settings</title>
 		<!-- Bootstrap core CSS -->
-		<!--link href="/css/bootstrap-grid.min.css" rel="stylesheet"/-->
-		<!--link href="/css/bootstrap-reboot.min.css" rel="stylesheet"/-->
 		<link href="/css/bootstrap.min.css" rel="stylesheet"/>
 		<!-- Custom styles for this template -->
 		<link href="/css/dashboard.css" rel="stylesheet">
@@ -123,7 +121,7 @@
 							</div>
 						</div>
 						<div class="tab-pane" id="whales" role="tabpanel" aria-labelledby="whales-tab">
-							<h2 class="page-header text-success"><span class="oi oi-dollar"></span> Ballenas <button class="btn btn-info">Add</button></h2>
+							<h2 class="page-header text-success"><span class="oi oi-dollar"></span> Ballenas <button class="btn btn-success" data-add="whale"><span class="oi oi-plus"></span></button></h2>
 							<div class="row">
 								<div class="col-sm-12">
 									<div class="panel panel-success">
@@ -137,44 +135,24 @@
 														<th>Accion</th>
 													</tr>
 												</thead>
-												<tbody>
-													<tr>
-														<td>$1,000,000.00</td>
-														<td>$5,000,000.00</td>
-														<td><button class="btn btn-mx">Edit</button></td>
-													</tr>
-												</tbody>
-											</table>
-										</div>
+											<tbody></tbody>
+										</table>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="tab-pane" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
-							<h2 class="page-header text-success"><span class="oi oi-bullhorn"></span> Notificaciones <button class="btn btn-info">Add</button></h2>
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="panel panel-success">
-										<div class="panel-heading">Configuradas</div>
-										<div class="panel-body">
-											<table class="table table-bordered">
-												<thead>
-													<tr>
-														<th>Minimo</th>
-														<th>Maximo</th>
-														<th>Accion</th>
-													</tr>
-												</thead>
-												<tbody>
-													<tr>
-														<td>$15.00</td>
-														<td>$20.00</td>
-														<td><button class="btn btn-mx">Edit</button></td>
-													</tr>
-												</tbody>
-											</table>
+					</div>
+					<div class="tab-pane" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
+						<h2 class="page-header text-success"><span class="oi oi-bullhorn"></span> Notificaciones <button class="btn btn-success" data-add="notification"><span class="oi oi-plus"></span></button></h2>
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="panel panel-success">
+									<div class="panel-heading">Configuradas</div>
+									<div class="panel-body">
+										<div class="row">
+											<div class="col-sm-12" data-content=""></div>
 										</div>
-									</div>
+									</table>
 								</div>
 							</div>
 						</div>
@@ -182,13 +160,82 @@
 				</div>
 			</div>
 		</div>
-		<!-- Bootstrap core JavaScript
-		================================================== -->
-		<!-- Placed at the end of the document so the pages load faster -->
-		<script src="/js/jquery.min.js" ></script>
-		<!--script src="/js/popper.min.js"></script-->
-		<script src="/js/bootstrap.min.js"></script>
-		<script src="/js/localstorage.js"></script>
-		<script src="/js/options.js"></script>
-	</body>
+	</div>
+	<div class="modal" tabindex="-1" role="dialog" id="modal-whales">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Tittle</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12">
+							<form action="" role="form" autocomplete="off">
+								<div class="form-row">
+									<div class="form-group col-md-6">
+										<label for="min">Precio minimo</label>
+										<input type="number" class="form-control" id="min" placeholder="min" value="0.00"  min="0" step="100000.00" pattern="[0-9]*">
+									</div>
+									<div class="form-group col-md-6">
+										<label for="max">Precio maximo</label>
+										<input type="number" class="form-control" id="max" placeholder="max" value="0.00"  min="0" step="100000.00" pattern="[0-9]*">
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-save="whale">Guardar</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal" tabindex="-1" role="dialog" id="modal-notifications">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Tittle</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12">
+							<form action="" role="form" autocomplete="off">
+								<div class="form-row">
+									<div class="form-group col-md-6">
+										<label for="min">Precio minimo</label>
+										<input type="number" class="form-control" id="min" placeholder="min" value="0.00"  min="0" step="1.00" pattern="[0-9]*">
+									</div>
+									<div class="form-group col-md-6">
+										<label for="max">Precio maximo</label>
+										<input type="number" class="form-control" id="max" placeholder="max" value="0.00"  min="0" step="1.00" pattern="[0-9]*">
+									</div>
+								</div>
+								<div class="form-row">
+									<div class="form-group col-md-12">
+										<label for="book">Book</label>
+									<select class="form-control" id="book"></select>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-save="notification">Guardar</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="/js/jquery.min.js" ></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/localstoragedb.min.js"></script>
+<script src="/js/options.js"></script>
+</body>
 </html>
