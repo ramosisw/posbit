@@ -28,15 +28,25 @@ $(document).ready(function() {
     var $notifications_panel_tablist = $("<UL>").addClass("nav nav-tabs");
     var $notifications_panel_content = $("<DIV>").addClass("tab-content");
     $notifications_panel.empty();
+
+    var $whales_panel = $("#whales .panel-body [data-content]");
+    var $whales_panel_tablist = $("<UL>").addClass("nav nav-tabs");
+    var $whales_panel_content = $("<DIV>").addClass("tab-content");
+    $whales_panel.empty();
     for (var i = 0; item = books[i]; i++) {
         var book = item.book.toUpperCase().replace("_","/");
         $("#modal-notifications #book").append($("<OPTION>").val(item.book).text(book));
+        $("#modal-whales #book").append($("<OPTION>").val(item.book).text(book));
         $notifications_panel_tablist.append(
             $("<LI>").addClass(!i ? "active" : "")
-            .append($("<A>").text(book).attr("data-toggle", "tab").attr("href", "#" + item.book))
+            .append($("<A>").text(book).attr("data-toggle", "tab").attr("href", "#notification-" + item.book))
+        );
+        $whales_panel_tablist.append(
+            $("<LI>").addClass(!i ? "active" : "")
+            .append($("<A>").text(book).attr("data-toggle", "tab").attr("href", "#whale-" + item.book))
         );
         $notifications_panel_content.append(
-            $("<DIV>").addClass("tab-pane " + (!i ? "active" : "")).attr("id", item.book).attr("role", "tabpanel").append(
+            $("<DIV>").addClass("tab-pane " + (!i ? "active" : "")).attr("id", "notification-" + item.book).attr("role", "tabpanel").append(
                 //'<p>'+ item.book +'<p>'+
                 '<table class="table table-bordered">' +
                 '    <thead>' +
@@ -49,24 +59,46 @@ $(document).ready(function() {
                 '<tbody></tbody>'
             )
         );
+
+        $whales_panel_content.append(
+            $("<DIV>").addClass("tab-pane " + (!i ? "active" : "")).attr("id", "whale-" + item.book).attr("role", "tabpanel").append(
+                //'<p>'+ item.book +'<p>'+
+                '<table class="table table-bordered">' +
+                '    <thead>' +
+                '        <tr>' +
+                '            <th>Desde</th>' +
+                '            <th>Hasta</th>' +
+                '            <th>Accion</th>' +
+                '        </tr>' +
+                '    </thead>' +
+                '<tbody></tbody>'
+            )
+        );
     }
     $notifications_panel.append($notifications_panel_tablist).append($notifications_panel_content);
+    $whales_panel.append($whales_panel_tablist).append($whales_panel_content);
 
     function load_whales() {
-        var $tbody = $("#whales tbody");
-        $tbody.empty();
         var $whales = db_options.queryAll("whales");
         log({
             "whales": $whales
         });
+        var listEmpty = [];
+        $("#whales tbody").empty();
         for (var i = 0; $whale = $whales[i]; i++) {
-            var tr = $("<TR>").addClass(!$whale.status ? "danger" : "success")
+            var book_id = $whale.book;
+            var $tbody = $("#whales #whale-" + book_id +" tbody");
+            if (listEmpty.indexOf(book_id) == -1) {
+                $tbody.empty();
+                listEmpty.push(book_id);
+            }
+            var tr = $("<TR>").addClass(!$whale.status ? "danger" : "success").attr("data-type", "whale").attr("data-book", $whale.ID).attr("data-value", $whale.book)
                 .append($("<TD>").text(formatCurrency($whale.min)).attr("data-type", "whale").attr("data-value", $whale.min).attr("data-min", $whale.ID))
                 .append($("<TD>").text(formatCurrency($whale.max)).attr("data-type", "whale").attr("data-value", $whale.max).attr("data-max", $whale.ID))
                 .append($("<TD>").addClass("col-md-4")
                     .append($("<BUTTON>").html("<span class=\"oi oi-pencil\"></span>").addClass("btn btn-xs").attr("data-edit", "whale").attr("data-id", $whale.ID))
                     .append(" ")
-                    .append($("<BUTTON>").html('<span class="oi oi-trash"></span>').addClass("btn btn-xs"))
+                    .append($("<BUTTON>").html('<span class="oi oi-trash"></span>').addClass("btn btn-xs").attr("data-delete","whale").attr("data-id", $whale.ID))
                     .append(" ")
                     .append($("<BUTTON>").html("<span class=\"oi oi-volume-" + ($whale.status ? "high" : "off") + "\"></span>").addClass("btn btn-xs").attr("data-" + ($whale.status ? "disable" : "enable"), "whale").attr("data-id", $whale.ID))
                 );
@@ -75,16 +107,15 @@ $(document).ready(function() {
     }
 
     function load_notifications() {
-
         var $notifications = db_options.queryAll("notifications");
         log({
             "notifications": $notifications
         });
         var listEmpty = [];
-        var $tbody = $("#notifications tbody").empty();
+        $("#notifications tbody").empty();
         for (var i = 0; $notification = $notifications[i]; i++) {
             var book_id = $notification.book;
-            var $tbody = $("#notifications #" + book_id + " tbody");
+            var $tbody = $("#notifications #notification-" + book_id + " tbody");
             if (listEmpty.indexOf(book_id) == -1) {
                 $tbody.empty();
                 listEmpty.push(book_id);
@@ -95,7 +126,7 @@ $(document).ready(function() {
                 .append($("<TD>").addClass("col-md-4")
                     .append($("<BUTTON>").html("<span class=\"oi oi-pencil\"></span>").addClass("btn btn-xs").attr("data-edit", "notification").attr("data-id", $notification.ID))
                     .append(" ")
-                    .append($("<BUTTON>").html("<span class=\"oi oi-trash\"></span>").addClass("btn btn-xs"))
+                    .append($("<BUTTON>").html("<span class=\"oi oi-trash\"></span>").addClass("btn btn-xs").attr("data-delete","notification").attr("data-id", $notification.ID))
                     .append(" ")
                     .append($("<BUTTON>").html("<span class=\"oi oi-volume-" + ($notification.status ? "high" : "off") + "\"></span>").addClass("btn btn-xs").attr("data-" + ($notification.status ? "disable" : "enable"), "notification").attr("data-id", $notification.ID))
                 );
@@ -111,6 +142,16 @@ $(document).ready(function() {
         });
         log(last_notifications_tab);
         if (last_notifications_tab.length != undefined && last_notifications_tab.length > 0) $("#notifications a[href='" + last_notifications_tab[0].value + "']").click();
+    }
+
+    function showLastWhalesTab() {
+        var last_whales_tab = db_options.queryAll("settings", {
+            query: {
+                key: "last_whales_tab"
+            }
+        });
+        log(last_whales_tab);
+        if (last_whales_tab.length != undefined && last_whales_tab.length > 0) $("#whales a[href='" + last_whales_tab[0].value + "']").click();
     }
 
     function setStatus(table, id, status) {
@@ -154,6 +195,17 @@ $(document).ready(function() {
             key: "last_notifications_tab"
         }, {
             key: "last_notifications_tab",
+            value: href
+        });
+        db_options.commit();
+    });
+
+    $("#whales a[data-toggle=\"tab\"]").click(function(evt){
+        var href = $(this).attr("href");
+        db_options.insertOrUpdate("settings", {
+            key: "last_whales_tab"
+        }, {
+            key: "last_whales_tab",
             value: href
         });
         db_options.commit();
@@ -207,12 +259,12 @@ $(document).ready(function() {
     $("[data-add]").click(function(evt) {
         var type = $(this).attr("data-add");
         switch (type) {
-            case "whale":
+            case "whale" :
                 $("#modal-whales .modal-title").text("Nueva ballena");
                 $("#modal-whales [data-save]").attr("data-id", 0);
                 $("#modal-whales").modal();
                 break;
-            case "notification":
+            case "notification" :
                 $("#modal-notifications .modal-title").text("Nueva notificación");
                 $("#modal-notifications [data-save]").attr("data-id", 0);
                 $("#modal-notifications #book").show();
@@ -229,6 +281,7 @@ $(document).ready(function() {
                 $("#modal-whales .modal-title").text("Editar ballena");
                 $("#modal-whales #min").val($("[data-min=" + id + "][data-type=" + type + "]").attr("data-value"));
                 $("#modal-whales #max").val($("[data-max=" + id + "][data-type=" + type + "]").attr("data-value"));
+                $("#modal-whales #book").val($("[data-book=" + id + "][data-type=" + type + "]").attr("data-value"));
                 $("#modal-whales [data-save]").attr("data-id", id);
                 $("#modal-whales").modal();
                 break;
@@ -244,6 +297,25 @@ $(document).ready(function() {
         }
     });
 
+    $(document).on("click", "[data-delete]", function(){
+        var type = $(this).attr("data-delete");
+        var id = $(this).attr("data-id");
+        log({"type": type, "id": id});
+        switch(type){
+            case "notification":
+                db_options.deleteRows("notifications", {ID : id});
+                db_options.commit();
+                load_notifications();
+                break;
+            case "whale":
+                db_options.deleteRows("whales", {ID : id});
+                db_options.commit();
+                load_whales();
+                break;
+
+        }
+    });
+
     $("[data-save]").click(function(evt) {
         var type = $(this).attr("data-save");
         var id = $(this).attr("data-id");
@@ -251,8 +323,9 @@ $(document).ready(function() {
             case "whale":
                 var min = $("#modal-whales #min").val();
                 var max = $("#modal-whales #max").val();
+                var book = $("#modal-whales #book").val();
                 var id = $("#modal-whales [data-save]").attr("data-id");
-                setMinMax("whales", id, min, max);
+                setMinMaxBook("whales", id, min, max, book);
                 load_whales();
                 $("#modal-whales").modal('hide');
                 break;
@@ -342,4 +415,5 @@ $(document).ready(function() {
 
     if (last_tab_result.length != undefined && last_tab_result.length > 0) $(".sidebar>.nav-sidebar a[href='" + last_tab_result[0].value + "']").click();
     showLastNotificationsTab();
+    showLastWhalesTab();
 });

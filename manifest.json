@@ -2,7 +2,7 @@
     "manifest_version" : 2,
     "name"             : "Posbit",
     "short_name"       : "posbit",
-    "version"          : "2.0",
+    "version"          : "2.2",
     "description"      : "Bitso tool, ayuda en la toma de decisiones para comprar o vender criptomonedas.",
     "options_page"     : "options.html",
     "content_scripts": [{

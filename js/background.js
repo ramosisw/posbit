@@ -1,5 +1,4 @@
 (function() {
-
     if (localStorageDB == undefined) log('localStorage not defined!');
     else {
         db_options = new localStorageDB("options", localStorage);
@@ -15,6 +14,16 @@
             db_options.createTableWithData("settings", settings);
             db_options.commit();
         }
+        if (!db_options.tableExists("settings")){
+            var version = db_options.queryAll("settings", {
+                query:{
+                    key : "version"
+                }
+            });
+            if(isArray(version) && version.length > 0 && version.value != VERSION){
+                //update to new version
+            }
+        }
         if (!db_options.tableExists("orders")) {
             db_options.createTable("orders", ["book", "isBuy", "price", "amount", "value"]);
             db_options.commit();
@@ -24,28 +33,15 @@
             db_options.commit();
         }
         if (!db_options.tableExists("whales")) {
-            db_options.createTable("whales", ["min", "max", "status"]);
+            db_options.createTable("whales", ["min", "max", "book", "status"]);
             db_options.commit();
-            db_options.insertOrUpdate("whales", {
-                "min": 100000
-            }, {
-                "min": 100000,
-                "max": 5000000,
-                "status": 1
-            });
+        }
+        if(!db_options.columnExists("whales", "book")) {
+            db_options.alterTable("whales", "book", "xrp_mxn");
             db_options.commit();
         }
         if (!db_options.tableExists("notifications")) {
             db_options.createTable("notifications", ["min", "max", "book", "status"]);
-            db_options.commit();
-            db_options.insertOrUpdate("notifications", {
-                "min": 15
-            }, {
-                "min": 15,
-                "max": 20,
-                "book": "xrp_mxn",
-                "status": 1
-            });
             db_options.commit();
         }
         if (!db_options.tableExists("books")) {
@@ -77,15 +73,11 @@
                 "id": id
             }
         });
-        log({
-            "chrome_notifications": i
-        });
         return i.length != undefined && i.length >= 1;
     }
 
     function showNotification(id, title, message, buttons, callbackButtons) {
         //log({"id" : id, "title" : title, "message" : message, "buttons" : buttons, "callbackButtons" : callbackButtons});
-        if (existNotificationId(id)) return;
         var options = {
             iconUrl: '/icons/icon48x48.png',
             title: 'Posbit | ' + title,
@@ -95,11 +87,6 @@
         if (buttons != undefined) {
             options.buttons = buttons;
         }
-        db_options.insertOrUpdate("chrome_notifications", {
-            "id": id
-        }, {
-            "id": id
-        });
         chrome.notifications.create(id, options, function() {});
         if (callbackButtons != undefined && typeof callbackButtons == 'function') {
             chrome.notifications.onButtonClicked.addListener(callbackButtons);
@@ -152,7 +139,15 @@
                     break;
                 case SHOW_NOTIFICATION:
                     if (errorRequest(request, ["id", "title", "message"], sendResponse)) return;
-                    showNotification(request.id, request.title, request.message, request.buttons, request.callbackButtons);
+                    if (!existNotificationId(request.id)){
+                        db_options.insertOrUpdate("chrome_notifications", {
+                            "id": request.id
+                        }, {
+                            "id": request.id
+                        });
+                        db_options.commit();
+                        showNotification(request.id, request.title, request.message, request.buttons, request.callbackButtons);
+                    }
                     responseMessage("OK", sendResponse);
                     break;
                 case ADD_ORDERS:
@@ -201,13 +196,6 @@
                         item.max *= 1;
                         item.min *= 1;
                         var price = json.payload[0].price * 1;
-                        log({
-                            "book": json.payload[0].book,
-                            "min_max_price" : [item.min, item.max, price],
-                            "notify_max": item.max > 0 && price >= item.max,
-                            "notify_min": item.min > 0 && price <= item.min,
-                            "price": json.payload[0].price
-                        });
                         var book = json.payload[0].book.toUpperCase().replace("_", "/");
                         var prety_price = book.indexOf("MXN") == -1 ? price.toFixed(8) : formatCurrency(price.toFixed(2));
                         //check max
@@ -230,9 +218,54 @@
             }
         }
     }
+
+    function ballenas(){
+        var db_options = new localStorageDB("options", localStorage);
+        var check_books = db_options.queryAll("orders",{
+            distinct: ["book"]
+        });
+        if (isArray(check_books)){
+            for (var i = 0; item = check_books[i]; i++) {
+                var book = item.book.toUpperCase().replace("_", "/");
+                var whales = db_options.queryAll("whales",{
+                    query: {
+                        "book" : item.book,
+                        "status" : 1
+                    }
+                });
+                if(isArray(whales) && whales.length == 0){
+                    showNotification(
+                        item.book + "_NOT_"+(Math.floor(Math.random() * 10000 + 1)),
+                        "Sin ballenas",
+                        "Tienes postura(s) en " + book + " y no hay ballenas activas/configuradas."
+                    );
+                    continue;
+                }
+                if(isArray(whales)){
+                    $.getJSON("https://api.bitso.com/v3/order_book/?book=" + item.book).done(function(json) {
+                        if (!(json.success != undefined && json.success && json.payload.length >= 1)) return;
+                        var orders = db_options.queryAll("orders",{
+                            query:{
+                                "book" : item.book
+                            }
+                        });
+                        for (var j = 0; item = notifies[j]; j++) {
+                            item.min *= 1;
+                            item.max *= 1;
+                            var price = json.payload[0].price * 1;
+                            var book = json.payload[0].book.toUpperCase().replace("_", "/");
+                        }
+                    });
+                }
+            }
+        }
+    }
+
     notifications();
+    //sballenas();
     setInterval(function() {
         notifications();
+        //ballenas();
     }, 10000);
-    log(db_options.queryAll("orders"));
+    //log(db_options.queryAll("orders"));
 })();

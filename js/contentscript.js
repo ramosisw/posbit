@@ -25,9 +25,9 @@
     posbit.normalizeValues(user_trades, commision);
     var books = book.toLowerCase().split("/");
     var book_id = books[1] + "_" + books[0];
-    posbit.addOrders(user_ords, book_id);
+    //posbit.addOrders(user_ords, book_id);
     posbit.listenerNotifications();
-    posbit.listenerOrdersTab(book);
+    posbit.listenerOrdersTab(book_id);
 
     //Remover transacciones empatadas en compra venta
     for (var i = user_trades.length - 1; trade = user_trades[i]; i--) {
@@ -128,5 +128,4 @@
 
     //(("8.474577" * 1 + 0.0000001 * (1 - 0.008)).toFixed(6) * 1
     //TEST
-    console.log("Posbit loaded...");
 })();
