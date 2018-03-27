@@ -77,6 +77,7 @@ email ramos.isw@gmail.com
                 $orders.push(processOrderColumns($order.querySelectorAll("td")));
                 $orders[$orders.length - 1].book = book;
             }
+            log($orders);
             chrome.extension.sendRequest({
                 "code": ADD_ORDERS,
                 "orders": $orders,
@@ -160,9 +161,9 @@ email ramos.isw@gmail.com
             listenerNotifications: function() {
                 document.addEventListener("DOMSubtreeModified", function(evt) {
                     //console.log(evt);
-                    var notyElement = evt.srcElement.querySelector(".noty_bar.noty_type_alert");
+                    var notyElement = evt.srcElement.querySelector(".noty_bar");
                     if (notyElement != null) {
-                        var $message = notyElement.querySelector(".noty_text").innerText;
+                        var $message = notyElement.querySelector(".noty_text").textContent;
                         var $id = notyElement.getAttribute("id");
                         chrome.extension.sendRequest({
                             code: SHOW_NOTIFICATION,
@@ -176,9 +177,11 @@ email ramos.isw@gmail.com
                 }, false);
             },
             listenerOrdersTab: function(book) {
+                log("listener: " + book);
+                _book = book;
                 document.querySelector("#ords-tab").addEventListener("DOMSubtreeModified", function(evt) {
                     var ordersArray = this.querySelectorAll("tr");
-                    addOrders(ordersArray, book);
+                    addOrders(ordersArray, _book);
                 }, false);
             }
         };
